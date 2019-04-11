@@ -6,7 +6,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/node:4.8.2-jessie
+      - image: bash:4
     steps:
       - checkout
       - run:
@@ -14,7 +14,7 @@ jobs:
           command: echo build
   test-app1:
     docker:
-      - image: circleci/node:4.8.2-jessie
+      - image: bash:4
     steps:
       - checkout
       - multirepo/run-job-for-paths: 
@@ -24,7 +24,7 @@ jobs:
           command: echo test app-1
   test-app2:
     docker:
-      - image: circleci/node:4.8.2-jessie
+      - image: bash:4
     steps:
       - checkout
       - multirepo/run-job-for-paths: 
