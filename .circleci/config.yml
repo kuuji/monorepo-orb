@@ -1,26 +1,46 @@
 version: 2.1
-description: This is an inline job
-
+description: test multirepo
 orbs:
-  monorepo:
-    commands:
-      should_be_run:
-        parameters:
-          path:
-            type: string
-        steps:
-          - run: echo "hello <<parameters.path>>, from the inline command"
-
+  multirepo: dnephin/multirepo@0.0.7
 
 jobs:
-  test:
+  build:
     docker:
       - image: circleci/node:4.8.2-jessie
     steps:
-      - monorepo/should_be_run:
-          path: test, test2
+      - checkout
+      - run:
+          name: build
+          command: echo build
+  test-app1:
+    docker:
+      - image: circleci/node:4.8.2-jessie
+    steps:
+      - checkout
+      - multirepo/run-job-for-paths: 
+          paths: packages/app1
+      - run:
+          name: Test
+          command: echo test app-1
+  test-app2:
+    docker:
+      - image: circleci/node:4.8.2-jessie
+    steps:
+      - checkout
+      - multirepo/run-job-for-paths: 
+          paths: packages/app2 packages/shared-stuff
+      - run:
+          name: Test
+          command: echo test app-2
 
 workflows:
-  build-test-deploy:
+  version: 2
+  build_and_test:
     jobs:
-      - test
+      - build
+      - test-app1:
+          requires:
+            - build
+      - test-app2:
+          requires:
+            - build
