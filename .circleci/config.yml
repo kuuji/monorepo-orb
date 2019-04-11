@@ -19,6 +19,7 @@ jobs:
       - checkout
       - multirepo/run-job-for-paths: 
           paths: packages/app1
+          run_on_upstream: false
       - run:
           name: Test
           command: echo test app-1
@@ -29,6 +30,7 @@ jobs:
       - checkout
       - multirepo/run-job-for-paths: 
           paths: packages/app2 packages/shared-stuff
+          run_on_upstream: false
       - run:
           name: Test
           command: echo test app-2
