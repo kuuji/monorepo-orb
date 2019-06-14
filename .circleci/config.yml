@@ -1,46 +1,18 @@
-version: 2.1
-description: test multirepo
-orbs:
-  multirepo: dnephin/multirepo@0.0.7
-
 jobs:
   build:
     docker:
-      - image: bash:4
+      - image: circleci/node:4.8.2-jessie
     steps:
-      - checkout
       - run:
-          name: build
-          command: echo build
-  test-app1:
-    docker:
-      - image: circleci/node:9.10.1
-    steps:
-      - checkout
-      - multirepo/run-job-for-paths: 
-          paths: packages/app1
-      - run:
-          name: Test
-          command: echo test app-1
-  test-app2:
-    docker:
-      - image: circleci/node:9.10.1
-    steps:
-      - checkout
-      - multirepo/run-job-for-paths: 
-          paths: packages/app2 packages/shared-stuff
-      - run:
-          name: Test
-          command: echo test app-2
-
+          name: Do something
+          command: 'echo something'
 workflows:
   version: 2
-  build_and_test:
+  build-n-deploy:
     jobs:
-      - build
-      - test-app1:
-          requires:
-            - build
-      - test-app2:
-          requires:
-            - build
+      - build:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
